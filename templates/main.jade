@@ -15,22 +15,28 @@ html(lang="en")
                thead
                   tr
                      td.col-md-2.text-center ID
-                     td.col-md-3.text-center Listen Addr
-                     td.col-md-3.text-center Destination Addr
+                     td.col-md-2.text-center Type
+                     td.col-md-2.text-center Listen Addr
+                     td.col-md-2.text-center Destination Addr
                      td.col-md-4.text-center Operation
                tbody
                   range .Rules
                      tr .
                         td.text-center {{.ID}}
+                        if .IsHttp
+                           td.text-center Http
+                        else
+                           td.text-center TCP
                         td.text-center {{.SrcAddr}}
                         td.text-center {{.DstAddr}}
                         td.text-center
                            a(href="/console/del/{{.ID}}") Delete
                            span &nbsp;&nbsp;
-                           a(href="http://{{.SrcAddr}}/" target="_blank") Visit
+                           if .IsHttp
+                              a(href="http://{{.SrcAddr}}/" target="_blank") Visit
          .row
             .col-md-12
-               h1 Add Port Forward
+               h1 Add TCP Forward
          .row
             form(action="/console/add", method="get").col-md-12.form-horizontal
                .form-group
