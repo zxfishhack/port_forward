@@ -55,6 +55,7 @@ func NewManager() *PortForwardManager {
 	for k, v := range mgr.Rules {
 		v.inst = NewPortForward(v.SrcAddr, v.DstAddr, v.IsHttp)
 		if v.inst == nil {
+			log.Printf("forward %v->%v [%v] failed.", v.SrcAddr, v.DstAddr, v.IsHttp)
 			delete(mgr.Rules, k)
 		}
 	}
@@ -67,7 +68,8 @@ type ListVM struct {
 
 func (mgr *PortForwardManager)ListAll(ctx iris.Context) {
 	vm := ListVM{}
-	for _, v := range mgr.Rules {
+	for k := range mgr.Rules {
+		v := mgr.Rules[k]
 		vm.Rules = append(vm.Rules, &v)
 	}
 	mgr.listAllTpl.Execute(ctx, vm)
@@ -100,7 +102,7 @@ func (mgr *PortForwardManager)Add(ctx iris.Context) {
 		}
 	}
 	mgr.save()
-	mgr.ListAll(ctx)
+	ctx.Redirect("/console")
 }
 
 func (mgr *PortForwardManager)AddHttp(ctx iris.Context) {
@@ -116,7 +118,7 @@ func (mgr *PortForwardManager)AddHttp(ctx iris.Context) {
 		}
 	}
 	mgr.save()
-	mgr.ListAll(ctx)
+	ctx.Redirect("/console")
 }
 
 func (mgr *PortForwardManager)load() {

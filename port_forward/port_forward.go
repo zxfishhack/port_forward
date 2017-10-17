@@ -83,6 +83,7 @@ func (pf *PortForward) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (pf *PortForward)serve() {
+	log.Printf("start forwarding %v->%v", pf.addr, pf.remote)
 	connCh := make(chan net.Conn)
 	go func(){
 		for {
@@ -93,10 +94,14 @@ func (pf *PortForward)serve() {
 			connCh <- conn
 		}
 	}()
-	select {
-	case conn := <-connCh:
-		go pf.forward(conn)
-	case <-pf.closeCh:
+	hasErr := false
+	for ;!hasErr; {
+		select {
+		case conn := <-connCh:
+			go pf.forward(conn)
+		case <-pf.closeCh:
+			hasErr = true
+		}
 	}
 }
 
