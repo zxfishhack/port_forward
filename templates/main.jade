@@ -1,0 +1,58 @@
+doctype html
+html(lang="en")
+   head
+      title Forward List
+      meta(charset=utf-8)
+      script(src="/assets/js/bootstrap.min.js")
+      link(rel="stylesheet", href="/assets/css/bootstrap.min.css")
+   body
+      .container
+         .row
+            .col-md-12
+               h1 Forward List
+         .row
+            table.table
+               thead
+                  tr
+                     td.col-md-2.text-center ID
+                     td.col-md-3.text-center Listen Addr
+                     td.col-md-3.text-center Destination Addr
+                     td.col-md-4.text-center Operation
+               tbody
+                  range .Rules
+                     tr
+                        td.text-center {{.ID}}
+                        td.text-center {{.SrcAddr}}
+                        td.text-center {{.DstAddr}}
+                        td.text-center
+                           a(href="/console/del/{{.ID}}") Delete
+                           span &nbsp;&nbsp;
+                           a(href="http://{{.SrcAddr}}/" target="_blank") Visit
+         .row
+            .col-md-12
+               h1 Add Port Forward
+         .row
+            form(action="/console/add", method="get").col-md-12.form-horizontal
+               .form-group
+                  label.control-label.col-md-2 Listen Addr
+                  .col-md-3
+                     input(type="text", name="SrcAddr" placeholder="e.g. :1080").form-control
+                  label.control-label.col-md-2 Destination Addr
+                  .col-md-3
+                     input(type="text", name="DstAddr" placeholder="e.g. 127.0.0.1:1080").form-control
+                  .col-md-2
+                  button(type="submit").btn.btn-default Add
+            .row
+            .col-md-12
+               h1 Add Http Forward
+         .row
+            form(action="/console/add-http", method="get").col-md-12.form-horizontal
+               .form-group
+                  label.control-label.col-md-2 Listen Addr
+                  .col-md-3
+                     input(type="text", name="SrcAddr" placeholder="e.g. :1080").form-control
+                  label.control-label.col-md-2 Destination Addr
+                  .col-md-3
+                     input(type="text", name="DstAddr" placeholder="e.g. 127.0.0.1:1080").form-control
+                  .col-md-2
+                  button(type="submit").btn.btn-default Add
