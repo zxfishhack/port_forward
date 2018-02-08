@@ -48,13 +48,14 @@ func NewPortForward(listen string, remote string, isHttp bool) *PortForward {
 			pf.proxy.ModifyResponse = func(res *http.Response) error{
 				location := res.Header.Get("Location")
 				url, err := url.Parse(location)
-				if location != "" && err == nil {
+				if location != "" && url.Host != "" && err == nil {
 					idx := strings.Index(url.Host, ":")
 					if idx == -1 {
 						url.Host = url.Host + ":" + lPort;
 					} else {
 						url.Host = url.Host[:idx] + ":" + lPort;
 					}
+					log.Printf("modify location %v->%v", location, url.String());
 					res.Header.Set("Location", url.String())
 				}
 				return nil
