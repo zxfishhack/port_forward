@@ -8,6 +8,7 @@ import (
 	"sync/atomic"
 	"html/template"
 	"gopkg.in/yaml.v2"
+	"sort"
 	"log"
 )
 
@@ -72,6 +73,9 @@ func (mgr *PortForwardManager)ListAll(ctx iris.Context) {
 		v := mgr.Rules[k]
 		vm.Rules = append(vm.Rules, &v)
 	}
+	sort.Slice(vm.Rules, func(i, j int) bool {
+		return vm.Rules[i].SrcAddr < vm.Rules[j].SrcAddr
+	})
 	mgr.listAllTpl.Execute(ctx, vm)
 }
 
